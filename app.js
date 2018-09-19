@@ -62,13 +62,22 @@
 
   function drawPlayer (){
     context.beginPath();
-    context.fillstyle = '#000000';
     context.rect(player.x, player.y, player.width, player.height);
     context.stroke();
     context.closePath();
     context.beginPath();
     context.fillStyle = player.color;
     context.rect(player.x, player.y, player.width, player.height);
+    context.fill();
+    context.rect(player.x, player.y, player.width, 0.5 * player.height);
+    context.stroke();
+    context.closePath();
+    context.beginPath();
+    context.fillStyle = '#000000';
+    context.rect(
+      player.x + 0.2 * player.width, player.y + player.height / 6, 0.2 * player.width, player.height / 6);
+    context.rect(
+      player.x + 0.6 * player.width, player.y + player.height / 6, 0.2 * player.width, player.height / 6);
     context.fill();
     context.closePath();
   }
