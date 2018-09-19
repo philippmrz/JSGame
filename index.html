@@ -12,14 +12,12 @@
     }
 
     canvas {
+      display: block;
       width: 100vw;
       height: 100vh;
-      animation-name: colorchange;
-      animation-duration: 20s;
-      animation-iteration-count: infinite;
-      animation-timing-function:linear;
+      animation: colorchange 20s infinite;
     }
-    
+
     @keyframes colorchange {
         0%  {background-color: #ff00c1}
         30% {background-color: #9600ff}
@@ -32,6 +30,6 @@
 </head>
 <body>
   <canvas></canvas>
-  <script src="app.js"></script>
-</body>
+  </body>
+<script src="app.js"></script>
 </html>
