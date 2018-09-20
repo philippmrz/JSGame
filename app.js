@@ -29,7 +29,7 @@
   var player;
   var keys = [];
   var img = new Image();
-  img.src = 'schweinmitbbein.png';
+  img.src = 'animation1.png';
   setup();
   requestAnimationFrame(draw);
 
@@ -37,6 +37,7 @@
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
     context.lineWidth = 6;
+    context.imageSmoothingEnabled = false;
     player = new Player();
     addEventListener("keydown", function (evt) {
       keys[evt.keyCode] = true;
@@ -65,24 +66,6 @@
   function drawPlayer (){
     context.beginPath();
     context.drawImage(img, player.x, player.y, player.width, player.height);
-    context.fillText("kill me please", player.x - 20, player.y - 20); 
-    // context.rect(player.x, player.y, player.width, player.height);
-    // context.stroke();
-    // context.closePath();
-    // context.beginPath();
-    // context.fillStyle = player.color;
-    // context.rect(player.x, player.y, player.width, player.height);
-    // context.fill();
-    // context.rect(player.x, player.y, player.width, 0.5 * player.height);
-    // context.stroke();
-    // context.closePath();
-    // context.beginPath();
-    // context.fillStyle = '#000000';
-    // context.rect(
-    //   player.x + 0.2 * player.width, player.y + player.height / 6, 0.2 * player.width, player.height / 6);
-    // context.rect(
-    //   player.x + 0.6 * player.width, player.y + player.height / 6, 0.2 * player.width, player.height / 6);
-    context.fill();
     context.closePath();
     }
   }(document.querySelector('canvas'),document.querySelector('canvas').getContext('2d')));
