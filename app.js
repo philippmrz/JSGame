@@ -8,23 +8,24 @@
       this.y = 0.9 * canvas.height - this.height;
       this.speedX = 0;
       this.speedY = 0;
-      this.left = false;
-      this.right = false;
-      this.up = false;
-      this.jumping = false;
+      this.isLeft = false;
+      this.isRight = false;
+      this.isUp = false;
+      this.isJumping = false;
     }
 
     update() {
-      if (this.up == true && this.jumping == false) {
+      if (this.isUp && !this.isJumping) {
         this.speedY -= 35;
-        this.jumping = true;
+        this.isJumping = true;
+        this.speedX += 8;
       }
 
-      if (this.left == true) {
+      if (this.isLeft) {
         this.speedX -= 1.5;
       }
 
-      if (this.right == true) {
+      if (this.isRight) {
         this.speedX += 1.5;
       }
 
@@ -35,7 +36,7 @@
       this.speedX *= 0.9;
 
       if (this.y > 0.9 * canvas.height - this.height) {
-        this.jumping = false;
+        this.isJumping = false;
         this.y = 0.9 * canvas.height - this.height;
         this.speedY = 0;
       }
@@ -60,13 +61,13 @@
 
     switch (evt.keyCode) {
       case 37:
-        player.left = key_state;
+        player.isLeft = key_state;
         break;
       case 32:
-        player.up = key_state;
+        player.isUp = key_state;
         break;
       case 39:
-        player.right = key_state;
+        player.isRight = key_state;
         break;
     }
   }
@@ -99,7 +100,6 @@
   }
 
   var player;
-  var keys = [];
   var ticks;
   var img = new Image();
   var img1 = new Image();
