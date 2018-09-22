@@ -21,11 +21,11 @@
       }
 
       if (this.left == true) {
-        this.speedX -= 3;
+        this.speedX -= 1;
       }
 
       if (this.right == true) {
-        this.speedX += 3;
+        this.speedX += 1;
       }
 
       this.speedY += 2.5;
