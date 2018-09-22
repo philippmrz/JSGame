@@ -62,7 +62,7 @@
       case 37:
         player.left = key_state;
         break;
-      case 38:
+      case 32:
         player.up = key_state;
         break;
       case 39:
