@@ -93,9 +93,8 @@
       if (currentCharacterImage == img) currentCharacterImage = img1;
       else currentCharacterImage = img;
     }
-    ticks++;
-    console.log(currentCharacterImage, ticks);
     context.drawImage(currentCharacterImage, player.x, player.y, player.width, player.height);
+    ticks++;
     context.closePath();
   }
 
