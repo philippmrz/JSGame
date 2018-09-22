@@ -14,7 +14,8 @@
       this.jumping = false;
     }
   }
-  function update (){
+
+  function update() {
     if (player.up == true && player.jumping == false) {
 
       player.speedY -= 50;
@@ -45,8 +46,8 @@
       player.y = 0.9 * canvas.height - player.height;
       player.speedY = 0;
 
-}
-}
+    }
+  }
   var player;
   var keys = [];
   var img = new Image();
@@ -63,23 +64,24 @@
     document.body.addEventListener("keyup", keyListener);
   }
 
-  function keyListener(evt){
+  function keyListener(evt) {
 
-      var key_state = (evt.type == "keydown") ? true : false;
+    var key_state = (evt.type == "keydown") ? true : false;
 
-        switch(evt.keyCode) {
+    switch (evt.keyCode) {
 
-          case 37:
-            player.left = key_state;
-            break;
-          case 38:
-            player.up = key_state;
-            break;
-          case 39:
-            player.right = key_state;
-            break;
-      }
+      case 37:
+        player.left = key_state;
+        break;
+      case 38:
+        player.up = key_state;
+        break;
+      case 39:
+        player.right = key_state;
+        break;
+    }
   }
+
   function draw() {
     update();
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -96,9 +98,9 @@
     context.closePath();
   }
 
-  function drawPlayer (){
+  function drawPlayer() {
     context.beginPath();
     context.drawImage(img, player.x, player.y, player.width, player.height);
     context.closePath();
-    }
-  }(document.querySelector('canvas'),document.querySelector('canvas').getContext('2d')));
+  }
+}(document.querySelector('canvas'), document.querySelector('canvas').getContext('2d')));
