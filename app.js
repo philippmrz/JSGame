@@ -47,7 +47,10 @@
     canvas.height = canvas.clientHeight;
     context.imageSmoothingEnabled = false;
     player = new Player();
+    ticks = 0;
     img.src = 'animation1.png';
+    img1.src = 'animation2.png';
+    currentCharacterImage = img;
     addEventListener("keydown", keyListener);
     document.body.addEventListener("keyup", keyListener);
   }
@@ -86,13 +89,22 @@
 
   function drawPlayer() {
     context.beginPath();
-    context.drawImage(img, player.x, player.y, player.width, player.height);
+    if (ticks % 10 == 0) {
+      if (currentCharacterImage == img) currentCharacterImage = img1;
+      else currentCharacterImage = img;
+    }
+    ticks++;
+    console.log(currentCharacterImage, ticks);
+    context.drawImage(currentCharacterImage, player.x, player.y, player.width, player.height);
     context.closePath();
   }
 
   var player;
   var keys = [];
+  var ticks;
   var img = new Image();
+  var img1 = new Image();
+  var currentCharacterImage;
   setup();
   requestAnimationFrame(draw);
 }(document.querySelector('canvas'), document.querySelector('canvas').getContext('2d')));
