@@ -18,8 +18,9 @@
       if (this.isUp && !this.isJumping) {
         this.speedY -= 35;
         this.isJumping = true;
-        this.speedX += 8;
-      }
+        if (this.isLeft) this.speedX -= 20;
+        if (this.isRight) this.speedX += 20;
+       }
 
       if (this.isLeft) {
         this.speedX -= 1.5;
