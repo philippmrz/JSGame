@@ -13,40 +13,34 @@
       this.up = false;
       this.jumping = false;
     }
+
+    update() {
+      if (this.up == true && this.jumping == false) {
+        this.speedY -= 35;
+        this.jumping = true;
+      }
+
+      if (this.left == true) {
+        this.speedX -= 3;
+      }
+
+      if (this.right == true) {
+        this.speedX += 3;
+      }
+
+      this.speedY += 2.5;
+      this.x += player.speedX;
+      this.y += player.speedY;
+      this.speedX *= 0.9;
+      this.speedX *= 0.9;
+
+      if (this.y > 0.9 * canvas.height - this.height) {
+        this.jumping = false;
+        this.y = 0.9 * canvas.height - this.height;
+        this.speedY = 0;
+      }
+    }
   }
-
-  function update() {
-    if (player.up == true && player.jumping == false) {
-      player.speedY -= 35;
-      player.jumping = true;
-    }
-
-    if (player.left == true) {
-      player.speedX -= 3;
-    }
-
-    if (player.right == true) {
-      player.speedX += 3;
-    }
-
-    player.speedY += 2.5;
-    player.x += player.speedX;
-    player.y += player.speedY;
-    player.speedX *= 0.9;
-    player.speedX *= 0.9;
-
-    if (player.y > 0.9 * canvas.height - player.height) {
-      player.jumping = false;
-      player.y = 0.9 * canvas.height - player.height;
-      player.speedY = 0;
-    }
-  }
-
-  var player;
-  var keys = [];
-  var img = new Image();
-  setup();
-  requestAnimationFrame(draw);
 
   function setup() {
     canvas.width = canvas.clientWidth;
@@ -59,11 +53,9 @@
   }
 
   function keyListener(evt) {
-
     var key_state = (evt.type == "keydown") ? true : false;
 
     switch (evt.keyCode) {
-
       case 37:
         player.left = key_state;
         break;
@@ -77,7 +69,7 @@
   }
 
   function draw() {
-    update();
+    player.update();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     drawPlayer();
@@ -97,4 +89,10 @@
     context.drawImage(img, player.x, player.y, player.width, player.height);
     context.closePath();
   }
+
+  var player;
+  var keys = [];
+  var img = new Image();
+  setup();
+  requestAnimationFrame(draw);
 }(document.querySelector('canvas'), document.querySelector('canvas').getContext('2d')));
