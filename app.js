@@ -21,8 +21,8 @@
        }
 
        if (this.isJumping){
-         if (this.isLeft) this.speedX -= 2;
-         if (this.isRight) this.speedX += 2;
+         if (this.isLeft) this.speedX -= 1.25;
+         if (this.isRight) this.speedX += 1.25;
        }
 
       if (this.isLeft) {
@@ -104,7 +104,7 @@
     context.closePath();
   }
   function animatePlayer() {
-    if (ticks % 10 == 0) {
+    if (ticks % 9 == 0) {
       if (player.isRight) {
         if (currentCharacterImage == img) currentCharacterImage = img1;
         else currentCharacterImage = img;
