@@ -16,10 +16,13 @@
 
     update() {
       if (this.isUp && !this.isJumping) {
-        this.speedY -= 35;
+        this.speedY -= 30;
         this.isJumping = true;
-        if (this.isLeft) this.speedX -= 20;
-        if (this.isRight) this.speedX += 20;
+       }
+
+       if (this.isJumping){
+         if (this.isLeft) this.speedX -= 2;
+         if (this.isRight) this.speedX += 2;
        }
 
       if (this.isLeft) {
@@ -30,7 +33,7 @@
         this.speedX += 1.5;
       }
 
-      this.speedY += 2.5;
+      this.speedY += 2;
       this.x += this.speedX;
       this.y += this.speedY;
       this.speedX *= 0.9;
@@ -50,11 +53,15 @@
     context.imageSmoothingEnabled = false;
     player = new Player();
     ticks = 0;
-    img.src = 'animation1.png';
-    img1.src = 'animation2.png';
+    img.src = 'animation1-right.png';
+    img1.src = 'animation2-right.png';
+    img2.src = 'animation1-left.png';
+    img3.src = 'animation2-left.png';
+    img4.src = 'standing-right.png';
+    img5.src = 'standing-left.png';
     currentCharacterImage = img;
     addEventListener("keydown", keyListener);
-    document.body.addEventListener("keyup", keyListener);
+    addEventListener("keyup", keyListener);
   }
 
   function keyListener(evt) {
@@ -91,19 +98,39 @@
 
   function drawPlayer() {
     context.beginPath();
-    if (ticks % 10 == 0) {
-      if (currentCharacterImage == img) currentCharacterImage = img1;
-      else currentCharacterImage = img;
-    }
+    animatePlayer();
     context.drawImage(currentCharacterImage, player.x, player.y, player.width, player.height);
     ticks++;
     context.closePath();
   }
-
+  function animatePlayer() {
+    if (ticks % 10 == 0) {
+      if (player.isRight) {
+        if (currentCharacterImage == img) currentCharacterImage = img1;
+        else currentCharacterImage = img;
+      }
+      else if (player.isLeft) {
+        if (currentCharacterImage == img2) currentCharacterImage = img3;
+        else currentCharacterImage = img2;
+      }
+      else if (!player.isLeft && !player.isRight) {
+        if (currentCharacterImage == img || currentCharacterImage == img1) {
+          currentCharacterImage = img4;
+        }
+        if (currentCharacterImage == img2 || currentCharacterImage == img3) {
+          currentCharacterImage = img5;
+        }
+      }
+    }
+  }
   var player;
   var ticks;
   var img = new Image();
   var img1 = new Image();
+  var img2 = new Image();
+  var img3 = new Image();
+  var img4 = new Image();
+  var img5 = new Image();
   var currentCharacterImage;
   setup();
   requestAnimationFrame(draw);
