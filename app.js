@@ -29,8 +29,8 @@
       }
 
       this.speedY += 2.5;
-      this.x += player.speedX;
-      this.y += player.speedY;
+      this.x += this.speedX;
+      this.y += this.speedY;
       this.speedX *= 0.9;
       this.speedX *= 0.9;
 
