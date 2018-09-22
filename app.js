@@ -65,7 +65,7 @@
 
   function keyListener(evt){
 
-      var key_state = (evt.type == "keydown")?true:false;
+      var key_state = (evt.type == "keydown") ? true : false;
 
         switch(evt.keyCode) {
 
