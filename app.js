@@ -17,23 +17,18 @@
 
   function update() {
     if (player.up == true && player.jumping == false) {
-
-      player.speedY -= 50;
+      player.speedY -= 35;
       player.jumping = true;
-
     }
 
     if (player.left == true) {
-
       player.speedX -= 3;
-
     }
 
     if (player.right == true) {
-
       player.speedX += 3;
-
     }
+
     player.speedY += 2.5;
     player.x += player.speedX;
     player.y += player.speedY;
@@ -41,17 +36,15 @@
     player.speedX *= 0.9;
 
     if (player.y > 0.9 * canvas.height - player.height) {
-
       player.jumping = false;
       player.y = 0.9 * canvas.height - player.height;
       player.speedY = 0;
-
     }
   }
+
   var player;
   var keys = [];
   var img = new Image();
-  img.src = 'animation1.png';
   setup();
   requestAnimationFrame(draw);
 
@@ -60,6 +53,7 @@
     canvas.height = canvas.clientHeight;
     context.imageSmoothingEnabled = false;
     player = new Player();
+    img.src = 'animation1.png';
     addEventListener("keydown", keyListener);
     document.body.addEventListener("keyup", keyListener);
   }
