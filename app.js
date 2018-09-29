@@ -90,12 +90,12 @@
 
     player = new Player();
 
-    walkRightImages[0].src = 'animation1-right.png';
-    walkRightImages[1].src = 'animation2-right.png';
-    walkLeftImages[0].src = 'animation1-left.png';
-    walkLeftImages[1].src = 'animation2-left.png';
-    standingImages[0].src = 'standing-right.png';
-    standingImages[1].src = 'standing-left.png';
+    walkRightImages[0].src = 'assets/animation1-right.png';
+    walkRightImages[1].src = 'assets/animation2-right.png';
+    walkLeftImages[0].src = 'assets/animation1-left.png';
+    walkLeftImages[1].src = 'assets/animation2-left.png';
+    standingImages[0].src = 'assets/standing-right.png';
+    standingImages[1].src = 'assets/standing-left.png';
 
     addEventListener("keydown", keyListener);
     addEventListener("keyup", keyListener);
