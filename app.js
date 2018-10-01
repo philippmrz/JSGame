@@ -74,13 +74,40 @@
     }
   }
 
+  class Leancup {
+    constructor() {
+      this.width = 12.5;
+      this.height = 25.55;
+      this.deltaY = 20;
+      this.x = canvas.width / 2;
+      this.y = 0.9 * canvas.height - this.height - this.deltaY - 5;
+      this.defaultY = this.y;
+      this.speed = 1;
+    }
+
+    update() {
+      if (this.y > this.defaultY + this.deltaY / 2 || this.y < this.defaultY - this.deltaY / 2) {
+        this.speed *= -1;
+      }
+      this.y += this.speed;
+    }
+
+    draw() {
+      context.beginPath();
+      context.drawImage(leancupIMG, this.x, this.y, this.width, this.height);
+      context.closePath();
+    }
+  }
+
   function gameLoop() {
     requestAnimationFrame(gameLoop);
     player.update();
+    leancup.update();
     if (ticks % 9 == 0) player.changeCurrentImage();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     player.draw();
+    leancup.draw();
   }
 
   function setup() {
@@ -89,6 +116,7 @@
     context.imageSmoothingEnabled = false;
 
     player = new Player();
+    leancup = new Leancup();
 
     walkRightImages[0].src = 'assets/animation1-right.png';
     walkRightImages[1].src = 'assets/animation2-right.png';
@@ -96,6 +124,7 @@
     walkLeftImages[1].src = 'assets/animation2-left.png';
     standingImages[0].src = 'assets/standing-right.png';
     standingImages[1].src = 'assets/standing-left.png';
+    leancupIMG.src = 'assets/leancup.png'
 
     addEventListener("keydown", keyListener);
     addEventListener("keyup", keyListener);
@@ -103,6 +132,12 @@
     ticks = 0;
 
     requestAnimationFrame(gameLoop);
+
+    //lOGS FOR DEBUG
+    console.log('Leancup x:', leancup.x);
+    console.log('Leancup y:', leancup.y);
+    console.log('Canvas width:', canvas.width);
+    console.log('Canvas height:', canvas.height);
   }
 
   function drawBackground() {
@@ -130,10 +165,12 @@
   }
 
   var player;
+  var leancup;
   var ticks;
   var walkRightImages = [new Image(), new Image()];
   var walkLeftImages = [new Image(), new Image()];
   var standingImages = [new Image(), new Image()];
+  var leancupIMG = new Image();
 
   //Entrypoint
   setup();
