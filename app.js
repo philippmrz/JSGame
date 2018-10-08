@@ -76,8 +76,8 @@
 
   class Leancup {
     constructor() {
-      this.width = 40;
-      this.height = 70;
+      this.width = 25;
+      this.height = 44;
       this.deltaY = 20;
       this.x = canvas.width / 2;
       this.y = 0.9 * canvas.height - this.height - this.deltaY - 5;
