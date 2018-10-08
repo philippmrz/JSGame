@@ -72,6 +72,13 @@
       context.closePath();
       ticks++;
     }
+
+    detectLeancup() {
+      if (leancup.x >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
+        leancup.collected = true;
+        leancupCounter.counter++;
+      }
+    }
   }
 
   class Leancup {
@@ -83,6 +90,7 @@
       this.y = 0.9 * canvas.height - this.height - this.deltaY - 5;
       this.defaultY = this.y;
       this.speed = 1;
+      this.collected = false;
     }
 
     update() {
@@ -99,15 +107,40 @@
     }
   }
 
+  class LeancupCounter {
+    constructor() {
+      this.counter = 0;
+      this.x = 0.05 * canvas.width;
+      this.y = 0.05 * canvas.height;
+      this.width = 100;
+      this.height = 50;
+    }
+
+    draw() {
+      context.beginPath();
+      context.fillStyle = '#fffb96';
+      context.fillRect(this.x, this.y, this.width, this.height);
+
+      context.drawImage(leancupIMG, this.x + 15, this.y + 7, leancup.width * 0.8, leancup.height * 0.8);
+
+      context.fillStyle = '#000';
+      context.font = "30px Arial";
+      context.fillText(this.counter,this.x + this.width - 40,this.y + this.height / 2 + 10);
+      context.closePath();
+    }
+  }
+
   function gameLoop() {
     requestAnimationFrame(gameLoop);
     player.update();
-    leancup.update();
+    player.detectLeancup();
+    if (!leancup.collected) leancup.update();
     if (ticks % 9 == 0) player.changeCurrentImage();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     player.draw();
-    leancup.draw();
+    if (!leancup.collected) leancup.draw();
+    leancupCounter.draw();
   }
 
   function setup() {
@@ -117,6 +150,7 @@
 
     player = new Player();
     leancup = new Leancup();
+    leancupCounter = new LeancupCounter();
 
     walkRightImages[0].src = 'assets/animation1-right.png';
     walkRightImages[1].src = 'assets/animation2-right.png';
