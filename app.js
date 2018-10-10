@@ -76,6 +76,7 @@
     detectLeancup() {
       if (leancup.x >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
         leancup.collected = true;
+        leancup.x = leancup.y = 0;
         leancupCounter.counter++;
       }
     }
@@ -132,9 +133,9 @@
 
   function gameLoop() {
     requestAnimationFrame(gameLoop);
-    player.update();
+    if (!leancup.collected) player.update();
     player.detectLeancup();
-    if (!leancup.collected) leancup.update();
+    leancup.update();
     if (ticks % 9 == 0) player.changeCurrentImage();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
