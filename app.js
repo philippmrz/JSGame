@@ -74,9 +74,9 @@
     }
 
     detectLeancup() {
-      if (leancup.x >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
+      if (!leancup.collected && leancup.x >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
+        leancup.y = leancup.x = 0;
         leancup.collected = true;
-        leancup.x = leancup.y = 0;
         leancupCounter.counter++;
       }
     }
@@ -126,16 +126,18 @@
 
       context.fillStyle = '#000';
       context.font = "30px Arial";
-      context.fillText(this.counter,this.x + this.width - 40,this.y + this.height / 2 + 10);
+      context.fillText(this.counter / 2,this.x + this.width - 40,this.y + this.height / 2 + 10);
       context.closePath();
     }
   }
 
   function gameLoop() {
     requestAnimationFrame(gameLoop);
-    if (!leancup.collected) player.update();
-    player.detectLeancup();
-    leancup.update();
+    player.update();
+    if (!leancup.collected) {
+      player.detectLeancup();
+      leancup.update();
+    }
     if (ticks % 9 == 0) player.changeCurrentImage();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
@@ -159,7 +161,7 @@
     walkLeftImages[1].src = 'assets/animation2-left.png';
     standingImages[0].src = 'assets/standing-right.png';
     standingImages[1].src = 'assets/standing-left.png';
-    leancupIMG.src = 'assets/leancup.png'
+    leancupIMG.src = 'assets/leancup.png';
 
     addEventListener("keydown", keyListener);
     addEventListener("keyup", keyListener);
@@ -169,9 +171,6 @@
     requestAnimationFrame(gameLoop);
 
     //lOGS FOR DEBUG
-    console.log('Leancup x:', leancup.x);
-    console.log('Leancup y:', leancup.y);
-    console.log('Canvas width:', canvas.width);
     console.log('Canvas height:', canvas.height);
   }
 
