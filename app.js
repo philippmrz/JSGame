@@ -74,9 +74,8 @@
     }
 
     detectLeancup() {
-      if (!leancup.collected && leancup.x >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
-        leancup.y = leancup.x = 0;
-        leancup.collected = true;
+      if (leancup.x >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
+        leancup.x = Math.floor(Math.random() * (canvas.width - leancup.width) + leancup.width / 2);
         leancupCounter.counter++;
       }
     }
@@ -91,7 +90,6 @@
       this.y = 0.9 * canvas.height - this.height - this.deltaY - 5;
       this.defaultY = this.y;
       this.speed = 1;
-      this.collected = false;
     }
 
     update() {
@@ -106,6 +104,7 @@
       context.drawImage(leancupIMG, this.x, this.y, this.width, this.height);
       context.closePath();
     }
+
   }
 
   class LeancupCounter {
@@ -119,14 +118,10 @@
 
     draw() {
       context.beginPath();
-      context.fillStyle = '#fffb96';
-      context.fillRect(this.x, this.y, this.width, this.height);
-
       context.drawImage(leancupIMG, this.x + 15, this.y + 7, leancup.width * 0.8, leancup.height * 0.8);
-
-      context.fillStyle = '#000';
-      context.font = "30px Arial";
-      context.fillText(this.counter / 2,this.x + this.width - 40,this.y + this.height / 2 + 10);
+      context.fillStyle = '#fff';
+      context.font = "30px sans";
+      context.fillText(this.counter - 1, this.x + this.width - 40,this.y + this.height / 2 + 10);
       context.closePath();
     }
   }
@@ -134,16 +129,14 @@
   function gameLoop() {
     requestAnimationFrame(gameLoop);
     player.update();
-    if (!leancup.collected) {
-      player.detectLeancup();
-      leancup.update();
-    }
+    player.detectLeancup();
+    leancup.update();
     if (ticks % 9 == 0) player.changeCurrentImage();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     player.draw();
-    if (!leancup.collected) leancup.draw();
-    leancupCounter.draw();
+    leancup.draw();
+    if (leancupCounter.counter > 1) leancupCounter.draw();
   }
 
   function setup() {
