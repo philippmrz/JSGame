@@ -74,7 +74,7 @@
     }
 
     detectLeancup() {
-      if (leancup.x >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
+      if (leancup.x + leancup.width >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
         leancup.x = Math.floor(Math.random() * (canvas.width - leancup.width) + leancup.width / 2);
         leancupCounter.counter++;
       }
