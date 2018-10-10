@@ -155,6 +155,7 @@
     standingImages[0].src = 'assets/standing-right.png';
     standingImages[1].src = 'assets/standing-left.png';
     leancupIMG.src = 'assets/leancup.png';
+    bgIMG.src = 'assets/skyline.png';
 
     addEventListener("keydown", keyListener);
     addEventListener("keyup", keyListener);
@@ -172,6 +173,7 @@
     context.fillStyle = '#000000';
     context.rect(0, 0.9 * canvas.height, canvas.width, 0.1 * canvas.height);
     context.fill();
+    for (let x = 0; x < canvas.width; x += 200) context.drawImage(bgIMG, x, 0.9 * canvas.height - 252);
     context.closePath();
   }
 
@@ -198,6 +200,7 @@
   var walkLeftImages = [new Image(), new Image()];
   var standingImages = [new Image(), new Image()];
   var leancupIMG = new Image();
+  var bgIMG = new Image();
 
   //Entrypoint
   setup();
