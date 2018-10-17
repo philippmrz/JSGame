@@ -26,19 +26,14 @@
         if (this.isRight) this.speedX += 1.25;
       }
 
-      if (this.isLeft) {
-        this.speedX -= 1.5;
-      }
-
-      if (this.isRight) {
-        this.speedX += 1.5;
-      }
+      if (this.isLeft) this.speedX -= 1.5;
+      if (this.isRight) this.speedX += 1.5;
 
       this.speedY += 2;
       this.x += this.speedX;
       this.y += this.speedY;
       this.speedX *= 0.87;
-
+      if (this.x < 0) this.x = 0;
       if (this.y > 0.9 * canvas.height - this.height) {
         this.isJumping = false;
         this.y = 0.9 * canvas.height - this.height;
