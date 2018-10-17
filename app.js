@@ -7,6 +7,8 @@
       this.x = 0.1 * canvas.width;
       this.y = 0.9 * canvas.height - this.height;
       this.speedX = 0;
+      this.accX = 0.2;
+      this.topSpeedX = 10;
       this.speedY = 0;
       this.isLeft = false;
       this.isRight = false;
@@ -15,25 +17,31 @@
       this.currentImage = standingImages[0];
     }
 
-    update() {
+    updateX() {
+      if (this.isJumping) {
+        if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
+        if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
+      }
+
+      if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
+      else if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
+
+      if (!(this.isLeft || this.isRight)) this.speedX *= 0.9;
+
+      this.x += this.speedX;
+
+      if (this.x < 0) this.x = 0;//Left border
+    }
+
+    updateY() {
       if (this.isUp && !this.isJumping) {
         this.speedY -= 30;
         this.isJumping = true;
       }
 
-      if (this.isJumping) {
-        if (this.isLeft) this.speedX -= 1.25;
-        if (this.isRight) this.speedX += 1.25;
-      }
-
-      if (this.isLeft) this.speedX -= 1.5;
-      if (this.isRight) this.speedX += 1.5;
-
-      this.speedY += 2;
-      this.x += this.speedX;
+      this.speedY += 2; //Gravity
       this.y += this.speedY;
-      this.speedX *= 0.87;
-      if (this.x < 0) this.x = 0;
+
       if (this.y > 0.9 * canvas.height - this.height) {
         this.isJumping = false;
         this.y = 0.9 * canvas.height - this.height;
@@ -116,14 +124,15 @@
       context.drawImage(leancupIMG, this.x + 15, this.y + 7, leancup.width * 0.8, leancup.height * 0.8);
       context.fillStyle = '#fff';
       context.font = "30px sans";
-      context.fillText(this.counter - 1, this.x + this.width - 40,this.y + this.height / 2 + 10);
+      context.fillText(this.counter - 1, this.x + this.width - 40, this.y + this.height / 2 + 10);
       context.closePath();
     }
   }
 
   function gameLoop() {
     requestAnimationFrame(gameLoop);
-    player.update();
+    player.updateX();
+    player.updateY();
     player.detectLeancup();
     leancup.update();
     if (ticks % 9 == 0) player.changeCurrentImage();
