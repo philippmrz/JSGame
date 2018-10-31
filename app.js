@@ -124,10 +124,11 @@
       context.drawImage(leancupIMG, this.x + 15, this.y + 7, leancup.width * 0.8, leancup.height * 0.8);
       context.fillStyle = '#fff';
       context.font = "30px sans";
-      context.fillText(this.counter - 1, this.x + this.width - 40, this.y + this.height / 2 + 10);
+      context.fillText(this.counter, this.x + this.width - 40, this.y + this.height / 2 + 10);
       context.closePath();
     }
   }
+
   class Solid {
     constructor(x, y, width, height, color) {
       this.x = x;
@@ -145,7 +146,7 @@
       context.closePath();
     }
   }
-  
+
   function gameLoop() {
     requestAnimationFrame(gameLoop);
     player.updateX();
@@ -158,7 +159,7 @@
     player.draw();
     leancup.draw();
     block.draw();
-    if (leancupCounter.counter > 1) leancupCounter.draw();
+    leancupCounter.draw();
   }
 
   function setup() {
@@ -170,7 +171,6 @@
     leancup = new Leancup();
     leancupCounter = new LeancupCounter();
     block = new Solid(canvas.width * 0.7, canvas.height * 0.9 - 60, 60, 60);
-
     walkRightImages[0].src = 'assets/animation1-right.png';
     walkRightImages[1].src = 'assets/animation2-right.png';
     walkLeftImages[0].src = 'assets/animation1-left.png';
