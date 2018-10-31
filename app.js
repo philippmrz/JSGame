@@ -7,7 +7,7 @@
       this.x = 0.1 * canvas.width;
       this.y = 0.9 * canvas.height - this.height;
       this.speedX = 0;
-      this.accX = 0.2;
+      this.accX = 0.4;
       this.topSpeedX = 10;
       this.speedY = 0;
       this.isLeft = false;
@@ -128,7 +128,24 @@
       context.closePath();
     }
   }
+  class Solid {
+    constructor(x, y, width, height, color) {
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+      this.color = color;
+    }
 
+    draw(){
+      context.beginPath();
+      context.fillstyle = this.color;
+      context.rect(this.x, this.y, this.width, this.height);
+      context.fill();
+      context.closePath();
+    }
+  }
+  
   function gameLoop() {
     requestAnimationFrame(gameLoop);
     player.updateX();
@@ -140,6 +157,7 @@
     drawBackground();
     player.draw();
     leancup.draw();
+    block.draw();
     if (leancupCounter.counter > 1) leancupCounter.draw();
   }
 
@@ -151,6 +169,7 @@
     player = new Player();
     leancup = new Leancup();
     leancupCounter = new LeancupCounter();
+    block = new Solid(canvas.width * 0.7, canvas.height * 0.9 - 60, 60, 60);
 
     walkRightImages[0].src = 'assets/animation1-right.png';
     walkRightImages[1].src = 'assets/animation2-right.png';
