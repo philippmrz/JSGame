@@ -5,7 +5,9 @@
       this.width = 60;
       this.height = 90;
       this.x = 0.1 * canvas.width;
+      this.oldX;
       this.y = 0.9 * canvas.height - this.height;
+      this.oldY;
       this.speedX = 0;
       this.accX = 0.4;
       this.topSpeedX = 10;
@@ -18,6 +20,7 @@
     }
 
     updateX() {
+      this.oldX = this.x;
       if (this.isJumping) {
         if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
         if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
@@ -30,10 +33,11 @@
 
       this.x += this.speedX;
 
-      if (this.x < 0) this.x = 0;//Left border
+      if (this.x < 0) this.x = 0; //Left border
     }
 
     updateY() {
+      this.oldY = this.y;
       if (this.isUp && !this.isJumping) {
         this.speedY -= 30;
         this.isJumping = true;
@@ -76,11 +80,35 @@
       ticks++;
     }
 
-    detectLeancup() {
+    detectObjects() {
       if (leancup.x + leancup.width >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
         leancup.x = Math.floor(Math.random() * (canvas.width - leancup.width) + leancup.width / 2);
         leancupCounter.counter++;
       }
+      if (player.x + player.width < solid.x || player.x > solid.x + solid.width || player.y + player.height < solid.y || player.y > solid.y + solid.width) {
+
+      } else {
+        if (this.y + this.height >= solid.y && this.oldY + this.height < solid.y) {
+          //top
+          this.y = solid.y - this.height - 0.1;
+          this.speedY = 0;
+          this.isJumping = false;
+        } else if (this.y <= solid.y + solid.height && this.oldY > solid.y + solid.height) {
+          //bottom
+          this.y = solid.y + solid.height  + 0.1;
+          this.speedY = 0;
+        } else if (this.x + this.width >= solid.x && this.oldX + this.width < solid.x) {
+          //left
+          this.x = solid.x - this.width - 0.1;
+          this.speedX = 0;
+        } else if (this.x <= solid.x + solid.width && this.oldX > solid.x + solid.width) {
+          //right
+          this. x = solid.x + solid.width + 0.1;
+          this.speedX = 0;
+        }
+      }
+
+
     }
   }
 
@@ -138,7 +166,7 @@
       this.color = color;
     }
 
-    draw(){
+    draw() {
       context.beginPath();
       context.fillstyle = this.color;
       context.rect(this.x, this.y, this.width, this.height);
@@ -151,14 +179,14 @@
     requestAnimationFrame(gameLoop);
     player.updateX();
     player.updateY();
-    player.detectLeancup();
+    player.detectObjects();
     leancup.update();
     if (ticks % 9 == 0) player.changeCurrentImage();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     player.draw();
     leancup.draw();
-    block.draw();
+    solid.draw();
     leancupCounter.draw();
   }
 
@@ -170,7 +198,7 @@
     player = new Player();
     leancup = new Leancup();
     leancupCounter = new LeancupCounter();
-    block = new Solid(canvas.width * 0.7, canvas.height * 0.9 - 60, 60, 60);
+    solid = new Solid(canvas.width * 0.7, canvas.height * 0.7 - 60, 60, 60);
     walkRightImages[0].src = 'assets/animation1-right.png';
     walkRightImages[1].src = 'assets/animation2-right.png';
     walkLeftImages[0].src = 'assets/animation1-left.png';
