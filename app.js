@@ -1,111 +1,113 @@
 (function(canvas, context) {
-    class Player {
-      constructor() {
-        this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
-        this.width = 60;
-        this.height = 90;
-        this.x = 0.1 * canvas.width;
-        this.oldX;
-        this.y = 0.9 * canvas.height - this.height;
-        this.oldY;
-        this.speedX = 0;
-        this.accX = 0.4;
-        this.topSpeedX = 10;
-        this.speedY = 0;
-        this.isLeft = false;
-        this.isRight = false;
-        this.isUp = false;
-        this.isJumping = false;
-        this.currentImage = standingImages[0];
-      }
+  class Player {
+    constructor() {
+      this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+      this.width = 60;
+      this.height = 90;
+      this.x = 0.1 * canvas.width;
+      this.oldX;
+      this.y = 0.9 * canvas.height - this.height;
+      this.oldY;
+      this.speedX = 0;
+      this.accX = 0.4;
+      this.topSpeedX = 10;
+      this.speedY = 0;
+      this.isLeft = false;
+      this.isRight = false;
+      this.isUp = false;
+      this.isJumping = false;
+      this.currentImage = standingImages[0];
+    }
 
-      updateX() {
-        this.oldX = this.x;
-        if (this.isJumping) {
-          if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
-          if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
-        }
-
+    updateX() {
+      this.oldX = this.x;
+      if (this.isJumping) {
         if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
-        else if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
-
-        if (!(this.isLeft || this.isRight)) this.speedX *= 0.9;
-
-        this.x += this.speedX;
-
-        if (this.x < 0) this.x = 0; //Left border
+        if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
       }
 
-      updateY() {
-        this.oldY = this.y;
-        if (this.isUp && !this.isJumping) {
-          this.speedY -= 30;
-          this.isJumping = true;
-        }
+      if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
+      else if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
 
-        this.speedY += 2; //Gravity
-        this.y += this.speedY;
+      if (!(this.isLeft || this.isRight)) this.speedX *= 0.9;
 
-        if (this.y > 0.9 * canvas.height - this.height) {
-          this.isJumping = false;
-          this.y = 0.9 * canvas.height - this.height;
-          this.speedY = 0;
-        }
+      this.x += this.speedX;
+
+      if (this.x < 0) this.x = 0; //Left border
+    }
+
+    updateY() {
+      this.oldY = this.y;
+      if (this.isUp && !this.isJumping) {
+        this.speedY -= 30;
+        this.isJumping = true;
       }
 
-      changeCurrentImage() {
-        if (this.isRight) {
-          //Add one to index to change currentImage
-          let index = walkRightImages.indexOf(this.currentImage) + 1;
-          if (index == walkRightImages.length) index = 0;
-          this.currentImage = walkRightImages[index];
-        } else if (this.isLeft) {
-          let index = walkLeftImages.indexOf(this.currentImage) + 1;
-          if (index == walkLeftImages.length) index = 0;
-          this.currentImage = walkLeftImages[index];
-        } else {
-          if (walkRightImages.includes(this.currentImage)) {
-            this.currentImage = standingImages[0];
-          }
-          if (walkLeftImages.includes(this.currentImage)) {
-            this.currentImage = standingImages[1];
-          }
+      this.speedY += 2; //Gravity
+      this.y += this.speedY;
+
+      if (this.y > 0.9 * canvas.height - this.height) {
+        this.isJumping = false;
+        this.y = 0.9 * canvas.height - this.height;
+        this.speedY = 0;
+      }
+    }
+
+    changeCurrentImage() {
+      if (this.isRight) {
+        //Add one to index to change currentImage
+        let index = walkRightImages.indexOf(this.currentImage) + 1;
+        if (index == walkRightImages.length) index = 0;
+        this.currentImage = walkRightImages[index];
+      } else if (this.isLeft) {
+        let index = walkLeftImages.indexOf(this.currentImage) + 1;
+        if (index == walkLeftImages.length) index = 0;
+        this.currentImage = walkLeftImages[index];
+      } else {
+        if (walkRightImages.includes(this.currentImage)) {
+          this.currentImage = standingImages[0];
+        }
+        if (walkLeftImages.includes(this.currentImage)) {
+          this.currentImage = standingImages[1];
         }
       }
+    }
 
-      draw() {
-        context.beginPath();
-        context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
-        context.closePath();
-        ticks++;
+    draw() {
+      context.beginPath();
+      context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
+      context.closePath();
+      ticks++;
+    }
+
+    detectObjects() {
+      if (leancup.x + leancup.width >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
+        leancup.x = Math.floor(Math.random() * (canvas.width - leancup.width) + leancup.width / 2);
+        leancupCounter.counter++;
       }
 
-      detectObjects() {
-        if (leancup.x + leancup.width >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
-          leancup.x = Math.floor(Math.random() * (canvas.width - leancup.width) + leancup.width / 2);
-          leancupCounter.counter++;
-        }
-
-        solids.forEach(function(solid) {
-          if (player.x + player.width > solid.x && player.x < solid.x + solid.width && player.y + player.height >= solid.y && player.y + player.height < solid.y + solid.height) {
+      solids.forEach(function(solid) {
+        if (!(player.x + player.width < solid.x || player.x > solid.x + solid.width || player.y + player.height < solid.y || player.y > solid.y + solid.height)) {
+          if (player.y + player.height >= solid.y && player.oldY + player.height < solid.y) {
             //top
-            player.y = solid.y - player.height;
+            player.y = solid.y - player.height - 0.1;
             player.speedY = 0;
             player.isJumping = false;
-          } else if (player.x + player.width > solid.x && player.x < solid.x + solid.width && player.y <= solid.y + solid.height && player.oldY > solid.y + solid.height) {
+          } else if (player.y <= solid.y + solid.height && player.oldY > solid.y + solid.height) {
             //bottom
             player.y = solid.y + solid.height + 0.1;
             player.speedY = 0;
-          } else if (solid.y > player.y && solid.y + solid.height < player.y + player.height && player.x + player.width >= solid.x && player.oldX + player.width < solid.x) {
+          } else if (player.x + player.width >= solid.x && player.oldX + player.width < solid.x) {
             //left
             player.x = solid.x - player.width - 0.1;
             player.speedX = 0;
-          } else if (solid.y > player.y && solid.y + solid.height < player.y + player.height && player.x <= solid.x + solid.width && player.oldX > solid.x + solid.width) {
+          } else if (player.x <= solid.x + solid.width && player.oldX > solid.x + solid.width) {
             //right
             player.x = solid.x + solid.width + 0.1;
             player.speedX = 0;
           }
-        });
+        }
+      });
     }
   }
 
@@ -196,8 +198,8 @@
     leancupCounter = new LeancupCounter();
     solids = [
       new Solid(canvas.width * 0.2, canvas.height * 0.8, 200, 60),
-      new Solid(canvas.width * 0.3, canvas.height * 0.7, 200, 60),
-      new Solid(canvas.width * 0.4, canvas.height * 0.6, 200, 60),
+      new Solid(canvas.width * 0.3, canvas.height * 0.65, 200, 60),
+      new Solid(canvas.width * 0.6, canvas.height * 0.5, 200, 60),
     ];
 
     walkRightImages[0].src = 'assets/animation1-right.png';
