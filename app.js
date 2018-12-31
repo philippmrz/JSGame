@@ -5,9 +5,9 @@
       this.width = 60;
       this.height = 90;
       this.x = 0.1 * canvas.width;
-      this.oldX;
+      this.oldX = this.x;
       this.y = 0.9 * canvas.height - this.height;
-      this.oldY;
+      this.oldY = this.y;
       this.speedX = 0;
       this.accX = 0.4;
       this.topSpeedX = 10;
@@ -87,26 +87,7 @@
       }
 
       solids.forEach(function(solid) {
-        if (!(player.x + player.width < solid.x || player.x > solid.x + solid.width || player.y + player.height < solid.y || player.y > solid.y + solid.height)) {
-          if (player.y + player.height >= solid.y && player.oldY + player.height < solid.y) {
-            //top
-            player.y = solid.y - player.height - 0.1;
-            player.speedY = 0;
-            player.isJumping = false;
-          } else if (player.y <= solid.y + solid.height && player.oldY > solid.y + solid.height) {
-            //bottom
-            player.y = solid.y + solid.height + 0.1;
-            player.speedY = 0;
-          } else if (player.x + player.width >= solid.x && player.oldX + player.width < solid.x) {
-            //left
-            player.x = solid.x - player.width - 0.1;
-            player.speedX = 0;
-          } else if (player.x <= solid.x + solid.width && player.oldX > solid.x + solid.width) {
-            //right
-            player.x = solid.x + solid.width + 0.1;
-            player.speedX = 0;
-          }
-        }
+        getCollision(solid, player)
       });
     }
   }
@@ -223,6 +204,29 @@
     console.log('Canvas height:', canvas.height);
   }
 
+  function getCollision(solid, obj) {
+    if (!(obj.x + obj.width < solid.x || obj.x > solid.x + solid.width || obj.y + obj.height < solid.y || obj.y > solid.y + solid.height)) {
+      if (obj.y + obj.height >= solid.y && obj.oldY + obj.height < solid.y) {
+        //top
+        obj.y = solid.y - obj.height - 0.1;
+        obj.speedY = 0;
+        obj.isJumping = false;
+      } else if (obj.y <= solid.y + solid.height && obj.oldY > solid.y + solid.height) {
+        //bottom
+        obj.y = solid.y + solid.height + 0.1;
+        obj.speedY = 0;
+      } else if (obj.x + obj.width >= solid.x && obj.oldX + obj.width < solid.x) {
+        //left
+        obj.x = solid.x - obj.width - 0.1;
+        obj.speedX = 0;
+      } else if (obj.x <= solid.x + solid.width && obj.oldX > solid.x + solid.width) {
+        //right
+        obj.x = solid.x + solid.width + 0.1;
+        obj.speedX = 0;
+      }
+    }
+  }
+
   function drawBackground() {
     context.beginPath();
     context.fillStyle = '#000000';
@@ -258,6 +262,10 @@
   var bgIMG = new Image();
   var concrete = new Image();
   var solids;
+  const LEFT = 0;
+  const RIGHT = 1;
+  const TOPPOM = 2;
+  const BOTTOM = 3;
 
   //Entrypoint
   setup();
