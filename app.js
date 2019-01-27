@@ -178,10 +178,10 @@
     leancup = new Leancup();
     leancupCounter = new LeancupCounter();
     solids = [
-      new Solid(220, 600, 200, 60),
-      new Solid(500, canvas.height - 350, 200, 60),
-      new Solid(800, canvas.height - 500, 200, 60),
-	  new Solid(0, 0.9 * canvas.height, canvas.width, 0.1 * canvas.height)
+      new Solid(220, 500, 200, 60),
+      new Solid(500, 400, 200, 60),
+      new Solid(800, 300, 200, 60),
+      new Solid(0, 0.90001 * canvas.height, canvas.width, 0.1 * canvas.height)
     ];
 
     walkRightImages[0].src = 'assets/animation1-right.png';
