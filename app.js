@@ -12,11 +12,12 @@
       this.accX = 0.4;
       this.topSpeedX = 10;
       this.speedY = 0;
-      this.isLeft = false;
-      this.isRight = false;
+      this.isLeft = false; // change this to facingLeft/Right in the whole doc
+      this.isRight = false; // this too
       this.isUp = false;
       this.isJumping = false;
-      this.currentImage = standingImages[0];
+      this.currentImage = imgStand;
+	  this.walk = false;
     }
 
     updateX() {
@@ -54,28 +55,27 @@
     }
 
     changeCurrentImage() {
-      if (this.isRight) {
-        //Add one to index to change currentImage
-        let index = walkRightImages.indexOf(this.currentImage) + 1;
-        if (index == walkRightImages.length) index = 0;
-        this.currentImage = walkRightImages[index];
-      } else if (this.isLeft) {
-        let index = walkLeftImages.indexOf(this.currentImage) + 1;
-        if (index == walkLeftImages.length) index = 0;
-        this.currentImage = walkLeftImages[index];
+      if (this.isRight || this.isLeft) {
+		  console.log(this.walk);
+		if (this.walk) {
+			this.currentImage = imgWalk;
+			this.walk = false;
+		} else {
+			this.currentImage = imgStand;
+			this.walk = true;
+		}
       } else {
-        if (walkRightImages.includes(this.currentImage)) {
-          this.currentImage = standingImages[0];
-        }
-        if (walkLeftImages.includes(this.currentImage)) {
-          this.currentImage = standingImages[1];
-        }
+		  this.currentImage = imgStand;
       }
     }
 
     draw() {
       context.beginPath();
-      context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
+	  if (this.isLeft) {
+		  context.translate(this.width,0);
+		  context.scale(-1,1);
+	  }
+	  context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
       context.closePath();
       ticks++;
     }
@@ -184,12 +184,10 @@
       new Solid(0, 0.90001 * canvas.height, canvas.width, 0.1 * canvas.height)
     ];
 
-    walkRightImages[0].src = 'assets/animation1-right.png';
-    walkRightImages[1].src = 'assets/animation2-right.png';
-    walkLeftImages[0].src = 'assets/animation1-left.png';
-    walkLeftImages[1].src = 'assets/animation2-left.png';
-    standingImages[0].src = 'assets/standing-right.png';
-    standingImages[1].src = 'assets/standing-left.png';
+	imgWalk.src = 'assets/walk.png';
+	imgDuckWalk.src = 'assets/duckWalk.png';
+	imgStand.src = 'assets/stand.png';
+	imgDuckStand.src = 'assets/duckStand.png';
     concrete.src = 'assets/concrete.jpg';
     leancupIMG.src = 'assets/leancup.png';
     bgIMG.src = 'assets/skyline.png';
@@ -256,9 +254,10 @@
   var player;
   var leancup;
   var ticks;
-  var walkRightImages = [new Image(), new Image()];
-  var walkLeftImages = [new Image(), new Image()];
-  var standingImages = [new Image(), new Image()];
+  var imgWalk = new Image();
+  var imgDuckWalk = new Image();
+  var imgStand = new Image();
+  var imgDuckStand = new Image();
   var leancupIMG = new Image();
   var bgIMG = new Image();
   var concrete = new Image();
