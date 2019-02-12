@@ -11,12 +11,18 @@
       this.speedX = 0;
       this.accX = 0.4;
       this.topSpeedX = 10;
+      this.topSpeedXDuck = 5;
       this.speedY = 0;
       this.isLeft = false;
       this.isRight = false;
       this.isUp = false;
+      this.isDown = false;
+      this.facingLeft = false;
+      this.facingRight = true;
+      this.isDucking = false;
       this.isJumping = false;
-      this.currentImage = standingImages[0];
+      this.currentImage = imgsRight['stand'];
+	    this.walk = false;
     }
 
     updateX() {
@@ -26,14 +32,27 @@
         if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
       }
 
-      if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
-      else if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
+
+      if (this.isDucking) {
+        if (Math.abs(this.speedX) > this.topSpeedXDuck) this.speedX *= 0.9;
+        if (this.isLeft && this.speedX > -this.topSpeedXDuck) this.speedX -= this.accX;
+        else if (this.isRight && this.speedX < this.topSpeedXDuck) this.speedX += this.accX;
+      } else {
+        if (Math.abs(this.speedX) > this.topSpeedX) this.speedX *= 0.9;
+        if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
+        else if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
+      }
 
       if (!(this.isLeft || this.isRight)) this.speedX *= 0.9;
 
+      if (Math.abs(this.speedX) < 0.1) this.speedX = 0;
+
       this.x += this.speedX;
 
-      if (this.x < 0) this.x = 0; //Left border
+      if (this.x < 0) {
+        this.x = 0; //Left border
+        this.speedX = 0;
+      }
     }
 
     updateY() {
@@ -53,29 +72,84 @@
       }
     }
 
-    changeCurrentImage() {
-      if (this.isRight) {
-        //Add one to index to change currentImage
-        let index = walkRightImages.indexOf(this.currentImage) + 1;
-        if (index == walkRightImages.length) index = 0;
-        this.currentImage = walkRightImages[index];
-      } else if (this.isLeft) {
-        let index = walkLeftImages.indexOf(this.currentImage) + 1;
-        if (index == walkLeftImages.length) index = 0;
-        this.currentImage = walkLeftImages[index];
+    updateStates() {
+      if (this.isDown && !this.isJumping) {
+        this.isDucking = true;
       } else {
-        if (walkRightImages.includes(this.currentImage)) {
-          this.currentImage = standingImages[0];
+        this.isDucking = false;
+      }
+
+      if (this.isLeft && !this.isRight) {
+        this.facingLeft = true;
+        this.facingRight = false;
+      }
+
+      if (!this.isLeft && this.isRight) {
+        this.facingLeft = false;
+        this.facingRight = true;
+      }
+
+    }
+
+    changeCurrentImage() {
+      if (this.facingLeft) {
+        if (this.isJumping) {
+          this.currentImage = imgsLeft['jump'];
+        } else if (this.isDucking) {
+          if (this.isLeft) {
+            if (this.walk) {
+              this.currentImage = imgsLeft['sneak'];
+            } else {
+              this.currentImage = imgsLeft['duck'];
+            }
+            this.walk = !this.walk;
+          } else {
+            this.currentImage = imgsLeft['duck'];
+          }
+        } else {
+          if (this.isLeft) {
+            if (this.walk) {
+              this.currentImage = imgsLeft['walk'];
+            } else {
+              this.currentImage = imgsLeft['stand'];
+            }
+            this.walk = !this.walk;
+          } else {
+            this.currentImage = imgsLeft['stand'];
+          }
         }
-        if (walkLeftImages.includes(this.currentImage)) {
-          this.currentImage = standingImages[1];
+      } else if (this.facingRight) {
+        if (this.isJumping) {
+          this.currentImage = imgsRight['jump'];
+        } else if (this.isDucking) {
+          if (this.isRight) {
+            if (this.walk) {
+              this.currentImage = imgsRight['sneak'];
+            } else {
+              this.currentImage = imgsRight['duck'];
+            }
+            this.walk = !this.walk;
+          } else {
+            this.currentImage = imgsRight['duck'];
+          }
+        } else {
+          if (this.isRight) {
+            if (this.walk) {
+              this.currentImage = imgsRight['walk'];
+            } else {
+              this.currentImage = imgsRight['stand'];
+            }
+            this.walk = !this.walk;
+          } else {
+            this.currentImage = imgsRight['stand'];
+          }
         }
       }
     }
 
     draw() {
       context.beginPath();
-      context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
+	    context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
       context.closePath();
       ticks++;
     }
@@ -131,7 +205,7 @@
       context.beginPath();
       context.drawImage(leancupIMG, this.x + 15, this.y + 7, leancup.width * 0.8, leancup.height * 0.8);
       context.fillStyle = '#fff';
-      context.font = "30px sans";
+      context.font = '30px sans';
       context.fillText(this.counter, this.x + this.width - 40, this.y + this.height / 2 + 10);
       context.closePath();
     }
@@ -156,6 +230,7 @@
     requestAnimationFrame(gameLoop);
     player.updateX();
     player.updateY();
+    player.updateStates();
     player.detectObjects();
     leancup.update();
     if (ticks % 9 == 0) player.changeCurrentImage();
@@ -178,24 +253,30 @@
     leancup = new Leancup();
     leancupCounter = new LeancupCounter();
     solids = [
-      new Solid(220, 500, 200, 60),
-      new Solid(500, 400, 200, 60),
-      new Solid(800, 300, 200, 60),
+      new Solid(220, canvas.height - 300, 200, 60),
+      new Solid(500, canvas.height - 400, 200, 60),
+      new Solid(800, canvas.height - 550, 200, 60),
       new Solid(0, 0.90001 * canvas.height, canvas.width, 0.1 * canvas.height)
     ];
 
-    walkRightImages[0].src = 'assets/animation1-right.png';
-    walkRightImages[1].src = 'assets/animation2-right.png';
-    walkLeftImages[0].src = 'assets/animation1-left.png';
-    walkLeftImages[1].src = 'assets/animation2-left.png';
-    standingImages[0].src = 'assets/standing-right.png';
-    standingImages[1].src = 'assets/standing-left.png';
+    imgsLeft['stand'].src = 'assets/standL.png';
+    imgsLeft['walk'].src = 'assets/walkL.png';
+    imgsLeft['jump'].src = 'assets/jumpL.png';
+    imgsLeft['duck'].src = 'assets/duckStandL.png';
+    imgsLeft['sneak'].src = 'assets/duckWalkL.png';
+
+    imgsRight['stand'].src = 'assets/standR.png';
+    imgsRight['walk'].src = 'assets/walkR.png';
+    imgsRight['jump'].src = 'assets/jumpR.png';
+    imgsRight['duck'].src = 'assets/duckStandR.png';
+    imgsRight['sneak'].src = 'assets/duckWalkR.png';
+
     concrete.src = 'assets/concrete.jpg';
     leancupIMG.src = 'assets/leancup.png';
     bgIMG.src = 'assets/skyline.png';
 
-    addEventListener("keydown", keyListener);
-    addEventListener("keyup", keyListener);
+    addEventListener('keydown', keyListener);
+    addEventListener('keyup', keyListener);
 
     ticks = 0;
 
@@ -238,17 +319,20 @@
   }
 
   function keyListener(evt) {
-    var key_state = (evt.type == "keydown") ? true : false;
+    var key_state = (evt.type == 'keydown') ? true : false;
 
     switch (evt.keyCode) {
       case 37:
         player.isLeft = key_state;
         break;
+      case 39:
+        player.isRight = key_state;
+        break;
       case 32:
         player.isUp = key_state;
         break;
-      case 39:
-        player.isRight = key_state;
+      case 40:
+        player.isDown = key_state;
         break;
     }
   }
@@ -256,9 +340,21 @@
   var player;
   var leancup;
   var ticks;
-  var walkRightImages = [new Image(), new Image()];
-  var walkLeftImages = [new Image(), new Image()];
-  var standingImages = [new Image(), new Image()];
+  //assign named keys to images
+  var imgsLeft = {
+    'stand' : new Image(),
+    'walk' : new Image(),
+    'jump' : new Image(),
+    'duck' : new Image(),
+    'sneak' : new Image()
+  }
+  var imgsRight = {
+    'stand' : new Image(),
+    'walk' : new Image(),
+    'jump' : new Image(),
+    'duck' : new Image(),
+    'sneak' : new Image()
+  }
   var leancupIMG = new Image();
   var bgIMG = new Image();
   var concrete = new Image();
