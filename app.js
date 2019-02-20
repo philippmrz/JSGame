@@ -53,6 +53,12 @@
         this.x = 0; //Left border
         this.speedX = 0;
       }
+
+      if (this.x + this.width > canvas.width) {
+        this.x = canvas.width - this.width;
+        this.speedX = 0;
+      }
+
     }
 
     updateY() {
