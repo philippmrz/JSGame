@@ -71,9 +71,9 @@
       this.speedY += 2; //Gravity
       this.y += this.speedY;
 
-      if (this.y > 0.9 * canvas.height - this.height) {
+      if (this.y >canvas.height - this.height - 50) {
         this.isJumping = false;
-        this.y = 0.9 * canvas.height - this.height;
+        this.y = canvas.height - this.height - 50;
         this.speedY = 0;
       }
     }
@@ -178,7 +178,7 @@
       this.height = 44;
       this.deltaY = 20;
       this.x = canvas.width / 2;
-      this.y = 0.9 * canvas.height - this.height - this.deltaY - 5;
+      this.y = canvas.height - 50 - this.height - this.deltaY - 5;
       this.defaultY = this.y;
       this.speed = 1;
     }
@@ -259,10 +259,10 @@
     leancup = new Leancup();
     leancupCounter = new LeancupCounter();
     solids = [
-      new Solid(220, canvas.height - 300, 200, 60),
-      new Solid(500, canvas.height - 400, 200, 60),
-      new Solid(800, canvas.height - 550, 200, 60),
-      new Solid(0, 0.90001 * canvas.height, canvas.width, 0.1 * canvas.height)
+      new Solid(220, canvas.height - 250, 200, 60),
+      new Solid(500, canvas.height - 300, 200, 60),
+      new Solid(800, canvas.height - 400, 200, 60),
+      new Solid(0, canvas.height- 50, canvas.width, 50)
     ];
 
     imgsLeft['stand'].src = 'assets/standL.png';
@@ -318,9 +318,9 @@
   function drawBackground() {
     context.beginPath();
     context.fillStyle = '#000000';
-    context.rect(0, 0.9 * canvas.height, canvas.width, 0.1 * canvas.height);
+    context.rect(0, canvas.height - 50, canvas.width, 0.1 * canvas.height);
     context.fill();
-    for (let x = 0; x < canvas.width; x += 200) context.drawImage(bgIMG, x, 0.9 * canvas.height - 252);
+    for (let x = 0; x < canvas.width; x += 200) context.drawImage(bgIMG, x, canvas.height - 252 -50);
     context.closePath();
   }
 
