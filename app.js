@@ -3,7 +3,7 @@
     constructor() {
       this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
       this.width = 60;
-      this.height = 90;
+      this.height = 110;
       this.x = 0.1 * canvas.width;
       this.oldX = this.x;
       this.y = 0.9 * canvas.height - this.height;
