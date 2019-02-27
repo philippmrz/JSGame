@@ -251,6 +251,10 @@
   }
 
   function setup() {
+    window.addEventListener("resize", function() {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+    });
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
     context.imageSmoothingEnabled = false;
