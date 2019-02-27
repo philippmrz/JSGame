@@ -1,28 +1,16 @@
 (function(canvas, context) {
   class Actor {
-    constructor() {
-      this.width;
-      this.height;
+    constructor(width, height, topSpeedX, accX, jumpSpeed) {
+      this.width = width;
+      this.height = height;
       this.x;
       this.y;
-      this.speedX;
-      this.speedY;
-    }
-  }
-
-  class Player /*extends Actor*/ {
-    constructor() {
-      this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
-      this.width = 60;
-      this.height = 110;
-      this.x = 0.1 * canvas.width;
       this.oldX = this.x;
-      this.y = 0.9 * canvas.height - this.height;
       this.oldY = this.y;
+      this.topSpeedX = topSpeedX;
+      this.jumpSpeed = jumpSpeed;
+      this.accX = accX;
       this.speedX = 0;
-      this.accX = 0.8;
-      this.topSpeedX = 10;
-      this.topSpeedXDuck = 5;
       this.speedY = 0;
       this.isLeft = false;
       this.isRight = false;
@@ -30,59 +18,37 @@
       this.isDown = false;
       this.facingLeft = false;
       this.facingRight = true;
-      this.isDucking = false;
-      this.isJumping = false;
-      this.currentImage = imgsRight['stand'];
-	    this.walk = false;
+      this.currentImage;
     }
 
     updateX() {
       this.oldX = this.x;
-      if (this.isJumping) {
-        if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
-        if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
-      }
-
-
-      if (this.isDucking) {
-        if (Math.abs(this.speedX) > this.topSpeedXDuck) this.speedX *= 0.9;
-        if (this.isLeft && this.speedX > -this.topSpeedXDuck) this.speedX -= this.accX;
-        else if (this.isRight && this.speedX < this.topSpeedXDuck) this.speedX += this.accX;
-      } else {
-        if (Math.abs(this.speedX) > this.topSpeedX) this.speedX *= 0.9;
-        if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
-        else if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
-      }
-
+      if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
+      if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
       if (!(this.isLeft || this.isRight)) this.speedX *= 0.6;
-
       if (Math.abs(this.speedX) < 0.1) this.speedX = 0;
-
       this.x += this.speedX;
-
       if (this.x < 0) {
         this.x = 0; //Left border
         this.speedX = 0;
       }
-
       if (this.x + this.width > canvas.width) {
         this.x = canvas.width - this.width;
         this.speedX = 0;
       }
-
     }
 
     updateY() {
       this.oldY = this.y;
       if (this.isUp && !this.isJumping) {
-        this.speedY -= 30;
+        this.speedY -= this.jumpSpeed;
         this.isJumping = true;
       }
 
       this.speedY += 2; //Gravity
       this.y += this.speedY;
 
-      if (this.y >canvas.height - this.height - 50) {
+      if (this.y > canvas.height - this.height - 50) {
         this.isJumping = false;
         this.y = canvas.height - this.height - 50;
         this.speedY = 0;
@@ -105,7 +71,45 @@
         this.facingLeft = false;
         this.facingRight = true;
       }
+    }
 
+    draw() {
+      context.beginPath();
+      context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
+      context.closePath();
+    }
+
+  }
+
+  class Player extends Actor {
+    constructor() {
+      super(
+        60,
+        110,
+        10,
+        0.8,
+        30
+      );
+      this.x = 0.1 * canvas.width,
+      this.y = 0.9 * canvas.height - this.height;
+      this.topSpeedXDuck = 5;
+      this.isDucking = false;
+      this.isJumping = false;
+      this.currentImage = imgsRight['stand'];
+	    this.walk = false;
+    }
+
+    updateX() {
+      super.updateX();
+      if (this.isDucking) {
+        if (Math.abs(this.speedX) > this.topSpeedXDuck) this.speedX *= 0.9;
+        if (this.isLeft && this.speedX > -this.topSpeedXDuck) this.speedX -= this.accX;
+        else if (this.isRight && this.speedX < this.topSpeedXDuck) this.speedX += this.accX;
+      } else {
+        if (Math.abs(this.speedX) > this.topSpeedX) this.speedX *= 0.9;
+        if (this.isLeft && this.speedX > -this.topSpeedX) this.speedX -= this.accX;
+        else if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
+      }
     }
 
     changeCurrentImage() {
@@ -165,9 +169,7 @@
     }
 
     draw() {
-      context.beginPath();
-	    context.drawImage(this.currentImage, this.x, this.y, this.width, this.height);
-      context.closePath();
+      super.draw();
       ticks++;
     }
 
