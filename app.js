@@ -9,7 +9,7 @@
       this.y = 0.9 * canvas.height - this.height;
       this.oldY = this.y;
       this.speedX = 0;
-      this.accX = 0.4;
+      this.accX = 0.8;
       this.topSpeedX = 10;
       this.topSpeedXDuck = 5;
       this.speedY = 0;
@@ -43,7 +43,7 @@
         else if (this.isRight && this.speedX < this.topSpeedX) this.speedX += this.accX;
       }
 
-      if (!(this.isLeft || this.isRight)) this.speedX *= 0.9;
+      if (!(this.isLeft || this.isRight)) this.speedX *= 0.6;
 
       if (Math.abs(this.speedX) < 0.1) this.speedX = 0;
 
