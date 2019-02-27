@@ -1,5 +1,16 @@
 (function(canvas, context) {
-  class Player {
+  class Actor {
+    constructor() {
+      this.width;
+      this.height;
+      this.x;
+      this.y;
+      this.speedX;
+      this.speedY;
+    }
+  }
+
+  class Player /*extends Actor*/ {
     constructor() {
       this.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
       this.width = 60;
