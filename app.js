@@ -185,6 +185,41 @@
     }
   }
 
+  /*class Walker extends Actor {
+    constructor() {
+      super();
+    }
+  }*/
+
+  class Crab extends Actor {
+    constructor(x, y) {
+      super(54, 36, 2.5, 0.2, 20);
+      this.x = x;
+      this.y = y;
+    }
+
+    changeCurrentImage() {
+      if (this.facingLeft) {
+        this.currentImage = imgsCrab['left']['stand'];
+      } else if (this.facingRight) {
+        this.currentImage = imgsCrab['right']['stand'];
+      }
+    }
+
+    applyAI() {
+      if (player.x - player.width > this.x) {
+        this.isRight = true;
+      } else {
+        this.isRight = false;
+      }
+      if (player.x + player.width < this.x) {
+        this.isLeft = true;
+      } else {
+        this.isLeft = false;
+      }
+    }
+  }
+
   class Leancup {
     constructor() {
       this.width = 25;
@@ -253,10 +288,15 @@
     player.detectObjects();
     leancup.update();
     if (ticks % 9 == 0) player.changeCurrentImage();
+    crab.applyAI();
+    crab.updateX();
+    crab.updateY();
+    crab.changeCurrentImage();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     player.draw();
     leancup.draw();
+    crab.draw();
     solids.forEach(function(solid) {
       solid.draw();
     });
@@ -275,6 +315,7 @@
 
     player = new Player();
     leancup = new Leancup();
+    crab = new Crab(0.1*canvas.width, 0.9 * canvas.height - 30);
     leancupCounter = new LeancupCounter();
     solids = [
       new Solid(220, canvas.height - 250, 200, 60),
@@ -294,6 +335,9 @@
     imgsRight['jump'].src = 'assets/jumpR.png';
     imgsRight['duck'].src = 'assets/duckStandR.png';
     imgsRight['sneak'].src = 'assets/duckWalkR.png';
+
+    imgsCrab['left']['stand'].src = 'assets/crabStandL.png';
+    imgsCrab['right']['stand'].src = 'assets/crabStandR.png';
 
     concrete.src = 'assets/concrete.jpg';
     leancupIMG.src = 'assets/leancup.png';
@@ -363,6 +407,7 @@
 
   var player;
   var leancup;
+  var crab;
   var ticks;
   //assign named keys to images
   var imgsLeft = {
@@ -378,6 +423,16 @@
     'jump' : new Image(),
     'duck' : new Image(),
     'sneak' : new Image()
+  }
+  var imgsCrab = {
+    'left' : {
+      'stand' : new Image(),
+      'walk' : new Image()
+    },
+    'right' : {
+      'stand' : new Image(),
+      'walk' : new Image()
+    }
   }
   var leancupIMG = new Image();
   var bgIMG = new Image();
