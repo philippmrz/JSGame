@@ -174,7 +174,7 @@
     }
 
     detectObjects() {
-      if (leancup.x + leancup.width >= this.x && leancup.x <= this.x + this.width && leancup.y >= this.y && leancup.y <= this.y + this.height) {
+      if (leancup.x + leancup.width >= this.x && leancup.x <= this.x + this.width && canvas.height - leancup.y >= this.y && canvas.height - leancup.y <= this.y + this.height) {
         leancup.x = Math.floor(Math.random() * (canvas.width - leancup.width) + leancup.width / 2);
         leancupCounter.counter++;
       }
@@ -226,13 +226,13 @@
       this.height = 44;
       this.deltaY = 20;
       this.x = canvas.width / 2;
-      this.y = canvas.height - 50 - this.height - this.deltaY - 5;
+      this.y = 50 - this.height - this.deltaY - 5;
       this.defaultY = this.y;
       this.speed = 1;
     }
 
     update() {
-      if (this.y > this.defaultY + this.deltaY / 2 || this.y < this.defaultY - this.deltaY / 2) {
+      if (canvas.height - this.y > this.defaultY + this.deltaY / 2 || canvas.height - this.y < this.defaultY - this.deltaY / 2) {
         this.speed *= -1;
       }
       this.y += this.speed;
@@ -275,7 +275,7 @@
 
     draw() {
       context.beginPath();
-      context.drawImage(concrete, this.x, this.y, this.width, this.height);
+      context.drawImage(concrete, this.x, canvas.height - this.y, this.width, this.height);
       context.closePath();
     }
   }
@@ -308,6 +308,7 @@
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
         context.imageSmoothingEnabled = false;
+        solids[3].width = canvas.width;
     });
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
@@ -318,10 +319,10 @@
     crab = new Crab(0.1*canvas.width, 0.9 * canvas.height - 30);
     leancupCounter = new LeancupCounter();
     solids = [
-      new Solid(220, canvas.height - 250, 200, 60),
-      new Solid(500, canvas.height - 300, 200, 60),
-      new Solid(800, canvas.height - 400, 200, 60),
-      new Solid(0, canvas.height- 50, canvas.width, 50)
+      new Solid(220, 250, 200, 60),
+      new Solid(500, 300, 200, 60),
+      new Solid(800, 400, 200, 60),
+      new Solid(0, 50, canvas.width, 50)
     ];
 
     imgsLeft['stand'].src = 'assets/standL.png';
@@ -355,15 +356,15 @@
   }
 
   function getCollision(solid, obj) {
-    if (!(obj.x + obj.width < solid.x || obj.x > solid.x + solid.width || obj.y + obj.height < solid.y || obj.y > solid.y + solid.height)) {
-      if (obj.y + obj.height >= solid.y && obj.oldY + obj.height < solid.y) {
+    if (!(obj.x + obj.width < solid.x || obj.x > solid.x + solid.width || obj.y + obj.height < canvas.height - solid.y || obj.y > canvas.height - solid.y + solid.height)) {
+      if (obj.y + obj.height >= canvas.height - solid.y && obj.oldY + obj.height < canvas.height - solid.y) {
         //top
-        obj.y = solid.y - obj.height - 0.1;
+        obj.y = canvas.height - solid.y - obj.height - 0.1;
         obj.speedY = 0;
         obj.isJumping = false;
-      } else if (obj.y <= solid.y + solid.height && obj.oldY > solid.y + solid.height) {
+      } else if (obj.y <= canvas.height - solid.y + solid.height && obj.oldY > canvas.height - solid.y + solid.height) {
         //bottom
-        obj.y = solid.y + solid.height + 0.1;
+        obj.y = canvas.height - solid.y + solid.height + 0.1;
         obj.speedY = 0;
       } else if (obj.x + obj.width >= solid.x && obj.oldX + obj.width < solid.x) {
         //left
