@@ -91,12 +91,12 @@
         30
       );
       this.x = 0.1 * canvas.width,
-      this.y = 0.9 * canvas.height - this.height;
+        this.y = 0.9 * canvas.height - this.height;
       this.topSpeedXDuck = 5;
       this.isDucking = false;
       this.isJumping = false;
       this.currentImage = imgsRight['stand'];
-	    this.walk = false;
+      this.walk = false;
     }
 
     updateX() {
@@ -174,7 +174,7 @@
     }
 
     detectObjects() {
-      if (leancup.x + leancup.width >= this.x && leancup.x <= this.x + this.width && canvas.height - leancup.y >= this.y && canvas.height - leancup.y <= this.y + this.height) {
+      if (leancup.x + leancup.width >= this.x && leancup.x <= this.x + this.width && canvas.height + leancup.y >= this.y && canvas.height + leancup.y <= this.y + this.height) {
         leancup.x = Math.floor(Math.random() * (canvas.width - leancup.width) + leancup.width / 2);
         leancupCounter.counter++;
       }
@@ -226,13 +226,13 @@
       this.height = 44;
       this.deltaY = 20;
       this.x = canvas.width / 2;
-      this.y = 50 - this.height - this.deltaY - 5;
+      this.y = -50 - this.height - this.deltaY;
       this.defaultY = this.y;
       this.speed = 1;
     }
 
     update() {
-      if (canvas.height - this.y > this.defaultY + this.deltaY / 2 || canvas.height - this.y < this.defaultY - this.deltaY / 2) {
+      if (canvas.height - this.y > canvas.height - this.defaultY + this.deltaY / 2 || canvas.height - this.y < canvas.height - this.defaultY - this.deltaY / 2) {
         this.speed *= -1;
       }
       this.y += this.speed;
@@ -240,7 +240,7 @@
 
     draw() {
       context.beginPath();
-      context.drawImage(leancupIMG, this.x, this.y, this.width, this.height);
+      context.drawImage(leancupIMG, this.x, canvas.height + this.y, this.width, this.height);
       context.closePath();
     }
 
@@ -305,10 +305,10 @@
 
   function setup() {
     window.addEventListener("resize", function() {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
-        context.imageSmoothingEnabled = false;
-        solids[3].width = canvas.width;
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      context.imageSmoothingEnabled = false;
+      solids[3].width = canvas.width;
     });
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
@@ -316,7 +316,7 @@
 
     player = new Player();
     leancup = new Leancup();
-    crab = new Crab(0.1*canvas.width, 0.9 * canvas.height - 30);
+    crab = new Crab(0.1 * canvas.width, 0.9 * canvas.height - 30);
     leancupCounter = new LeancupCounter();
     solids = [
       new Solid(220, 250, 200, 60),
@@ -383,7 +383,7 @@
     context.fillStyle = '#000000';
     context.rect(0, canvas.height - 50, canvas.width, 0.1 * canvas.height);
     context.fill();
-    for (let x = 0; x < canvas.width; x += 200) context.drawImage(bgIMG, x, canvas.height - 252 -50);
+    for (let x = 0; x < canvas.width; x += 200) context.drawImage(bgIMG, x, canvas.height - 252 - 50);
     context.closePath();
   }
 
@@ -412,27 +412,27 @@
   var ticks;
   //assign named keys to images
   var imgsLeft = {
-    'stand' : new Image(),
-    'walk' : new Image(),
-    'jump' : new Image(),
-    'duck' : new Image(),
-    'sneak' : new Image()
+    'stand': new Image(),
+    'walk': new Image(),
+    'jump': new Image(),
+    'duck': new Image(),
+    'sneak': new Image()
   }
   var imgsRight = {
-    'stand' : new Image(),
-    'walk' : new Image(),
-    'jump' : new Image(),
-    'duck' : new Image(),
-    'sneak' : new Image()
+    'stand': new Image(),
+    'walk': new Image(),
+    'jump': new Image(),
+    'duck': new Image(),
+    'sneak': new Image()
   }
   var imgsCrab = {
-    'left' : {
-      'stand' : new Image(),
-      'walk' : new Image()
+    'left': {
+      'stand': new Image(),
+      'walk': new Image()
     },
-    'right' : {
-      'stand' : new Image(),
-      'walk' : new Image()
+    'right': {
+      'stand': new Image(),
+      'walk': new Image()
     }
   }
   var leancupIMG = new Image();
