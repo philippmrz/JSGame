@@ -1,6 +1,9 @@
 (function(canvas, context) {
   class Actor {
     constructor(width, height, topSpeedX, accX, jumpSpeed) {
+      this.damage;
+      this.health;
+      this.maxHealth;
       this.width = width;
       this.height = height;
       this.x;
@@ -19,6 +22,17 @@
       this.facingLeft = false;
       this.facingRight = true;
       this.currentImage;
+      this.walk = false;
+    }
+
+    update() {
+        updateX();
+        updateY();
+        updateStates();
+    }
+
+    updateWalk() {
+        if (ticks % 9 == 0) this.walk = !this.walk;
     }
 
     updateX() {
@@ -81,6 +95,11 @@
 
   }
 
+  class Enemy extends Actor {
+    constructor(x, y) {
+    }
+  }
+
   class Player extends Actor {
     constructor() {
       super(
@@ -95,7 +114,7 @@
       this.topSpeedXDuck = 5;
       this.isDucking = false;
       this.isJumping = false;
-      this.currentImage = imgsRight['stand'];
+      this.currentImage = imgsPlayer['right']['stand'];
       this.walk = false;
     }
 
@@ -112,57 +131,53 @@
       }
     }
 
-    changeCurrentImage() {
+    updateCurrentImage() {
       if (this.facingLeft) {
         if (this.isJumping) {
-          this.currentImage = imgsLeft['jump'];
+          this.currentImage = imgsPlayer['left']['jump'];
         } else if (this.isDucking) {
           if (this.isLeft) {
             if (this.walk) {
-              this.currentImage = imgsLeft['sneak'];
+              this.currentImage = imgsPlayer['left']['sneak'];
             } else {
-              this.currentImage = imgsLeft['duck'];
+              this.currentImage = imgsPlayer['left']['duck'];
             }
-            this.walk = !this.walk;
           } else {
-            this.currentImage = imgsLeft['duck'];
+            this.currentImage = imgsPlayer['left']['duck'];
           }
         } else {
           if (this.isLeft) {
             if (this.walk) {
-              this.currentImage = imgsLeft['walk'];
+              this.currentImage = imgsPlayer['left']['walk'];
             } else {
-              this.currentImage = imgsLeft['stand'];
+              this.currentImage = imgsPlayer['left']['stand'];
             }
-            this.walk = !this.walk;
           } else {
-            this.currentImage = imgsLeft['stand'];
+            this.currentImage = imgsPlayer['left']['stand'];
           }
         }
       } else if (this.facingRight) {
         if (this.isJumping) {
-          this.currentImage = imgsRight['jump'];
+          this.currentImage = imgsPlayer['right']['jump'];
         } else if (this.isDucking) {
           if (this.isRight) {
             if (this.walk) {
-              this.currentImage = imgsRight['sneak'];
+              this.currentImage = imgsPlayer['right']['sneak'];
             } else {
-              this.currentImage = imgsRight['duck'];
+              this.currentImage = imgsPlayer['right']['duck'];
             }
-            this.walk = !this.walk;
           } else {
-            this.currentImage = imgsRight['duck'];
+            this.currentImage = imgsPlayer['right']['duck'];
           }
         } else {
           if (this.isRight) {
             if (this.walk) {
-              this.currentImage = imgsRight['walk'];
+              this.currentImage = imgsPlayer['right']['walk'];
             } else {
-              this.currentImage = imgsRight['stand'];
+              this.currentImage = imgsPlayer['right']['stand'];
             }
-            this.walk = !this.walk;
           } else {
-            this.currentImage = imgsRight['stand'];
+            this.currentImage = imgsPlayer['right']['stand'];
           }
         }
       }
@@ -185,24 +200,35 @@
     }
   }
 
-  /*class Walker extends Actor {
-    constructor() {
-      super();
-    }
-  }*/
-
   class Crab extends Actor {
     constructor(x, y) {
       super(54, 36, 2.5, 0.2, 20);
       this.x = x;
       this.y = y;
+      this.walk = false;
     }
 
-    changeCurrentImage() {
+    updateCurrentImage() {
       if (this.facingLeft) {
-        this.currentImage = imgsCrab['left']['stand'];
+        if (this.isLeft) {
+          if (this.walk) {
+            this.currentImage = imgsCrab['left']['walk'];
+          } else {
+            this.currentImage = imgsCrab['left']['stand'];
+          }
+        } else {
+          this.currentImage = imgsCrab['left']['stand'];
+        }
       } else if (this.facingRight) {
-        this.currentImage = imgsCrab['right']['stand'];
+        if (this.isRight) {
+          if (this.walk) {
+            this.currentImage = imgsCrab['right']['walk'];
+          } else {
+            this.currentImage = imgsCrab['right']['stand'];
+          }
+        } else {
+          this.currentImage = imgsCrab['right']['stand'];
+        }
       }
     }
 
@@ -284,14 +310,17 @@
     requestAnimationFrame(gameLoop);
     player.updateX();
     player.updateY();
+    player.updateWalk();
     player.updateStates();
     player.detectObjects();
     leancup.update();
-    if (ticks % 9 == 0) player.changeCurrentImage();
+    player.updateCurrentImage();
     crab.applyAI();
     crab.updateX();
     crab.updateY();
-    crab.changeCurrentImage();
+    crab.updateWalk();
+    crab.updateStates();
+    crab.updateCurrentImage();
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBackground();
     player.draw();
@@ -325,17 +354,17 @@
       new Solid(0, 50, canvas.width, 50)
     ];
 
-    imgsLeft['stand'].src = 'assets/standL.png';
-    imgsLeft['walk'].src = 'assets/walkL.png';
-    imgsLeft['jump'].src = 'assets/jumpL.png';
-    imgsLeft['duck'].src = 'assets/duckStandL.png';
-    imgsLeft['sneak'].src = 'assets/duckWalkL.png';
+    imgsPlayer['left']['stand'].src = 'assets/standL.png';
+    imgsPlayer['left']['walk'].src = 'assets/walkL.png';
+    imgsPlayer['left']['jump'].src = 'assets/jumpL.png';
+    imgsPlayer['left']['duck'].src = 'assets/duckStandL.png';
+    imgsPlayer['left']['sneak'].src = 'assets/duckWalkL.png';
 
-    imgsRight['stand'].src = 'assets/standR.png';
-    imgsRight['walk'].src = 'assets/walkR.png';
-    imgsRight['jump'].src = 'assets/jumpR.png';
-    imgsRight['duck'].src = 'assets/duckStandR.png';
-    imgsRight['sneak'].src = 'assets/duckWalkR.png';
+    imgsPlayer['right']['stand'].src = 'assets/standR.png';
+    imgsPlayer['right']['walk'].src = 'assets/walkR.png';
+    imgsPlayer['right']['jump'].src = 'assets/jumpR.png';
+    imgsPlayer['right']['duck'].src = 'assets/duckStandR.png';
+    imgsPlayer['right']['sneak'].src = 'assets/duckWalkR.png';
 
     imgsCrab['left']['stand'].src = 'assets/crabStandL.png';
     imgsCrab['right']['stand'].src = 'assets/crabStandR.png';
@@ -411,19 +440,21 @@
   var crab;
   var ticks;
   //assign named keys to images
-  var imgsLeft = {
+  var imgsPlayer = {
+    'left': {
     'stand': new Image(),
     'walk': new Image(),
     'jump': new Image(),
     'duck': new Image(),
     'sneak': new Image()
-  }
-  var imgsRight = {
+    },
+    'right': {
     'stand': new Image(),
     'walk': new Image(),
     'jump': new Image(),
     'duck': new Image(),
     'sneak': new Image()
+    }
   }
   var imgsCrab = {
     'left': {
